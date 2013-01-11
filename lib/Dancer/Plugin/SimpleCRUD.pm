@@ -410,7 +410,11 @@ sub simple_crud {
 
     # And a route to list records already in the table:
     my $list_handler
-        = sub { _create_list_handler(\%args, $table_name, $key_column); };
+        = _ensure_auth(
+            'view',
+            sub { _create_list_handler(\%args, $table_name, $key_column); },
+            \%args,
+        );
     get "$args{prefix}" => $list_handler;
 
     # If we should allow deletion of records, set up routes to handle that,
